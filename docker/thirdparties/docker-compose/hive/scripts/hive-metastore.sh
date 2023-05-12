@@ -22,34 +22,16 @@ nohup /opt/hive/bin/hive --service metastore &
 sleep 10s
 
 # if you test in your local，better use # to annotation section about tpch1.db
-if [[ ! -d "/mnt/scripts/tpch1.db" ]]; then
-    echo "/mnt/scripts/tpch1.db does not exist"
-    exit 1
-else
-    wget -P /mnt/scripts https://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/load/tpch1_parquet/tpch1.db.tar.gz
-    cd /mnt/scripts/
-    tar -zxf tpch1.db.tar.gz
-    rm -rf tpch1.db.tar.gz
-    cd -
-fi
 
 # put data file
 ## put tpch1
 echo "hadoop fs -mkdir /user/doris/"
 hadoop fs -mkdir -p /user/doris/
-echo "hadoop fs -put /mnt/scripts/tpch1.db /user/doris/"
-hadoop fs -put /mnt/scripts/tpch1.db /user/doris/
+
 
 ## put other preinstalled data
 echo "hadoop fs -put /mnt/scripts/preinstalled_data /user/doris/"
 hadoop fs -put /mnt/scripts/preinstalled_data /user/doris/
-
-# create table
-echo "hive -f /mnt/scripts/create_tpch1_orc.hql"
-hive -f /mnt/scripts/create_tpch1_orc.hql
-
-echo "hive -f /mnt/scripts/create_tpch1_parquet.hql"
-hive -f /mnt/scripts/create_tpch1_parquet.hql
 
 echo "hive -f /mnt/scripts/create_preinstalled_table.hql"
 hive -f /mnt/scripts/create_preinstalled_table.hql
