@@ -72,6 +72,15 @@ suite("test_hdfs_tvf") {
                         "format" = "${format}",
                         "compress_type" = "GZ") order by c1; """
 
+            // test csv format infer compress type
+            uri = "${defaultFS}" + "/user/doris/preinstalled_data/csv_format_test/all_types_compressed.csv.gz"
+            format = "csv"
+            qt_csv_infer_compress_type """ select * from HDFS(
+                        "uri" = "${uri}",
+                        "fs.defaultFS"= "${defaultFS}",
+                        "hadoop.username" = "${hdfsUserName}",
+                        "format" = "${format}") order by c1; """
+
             // test csv_with_names file format
             uri = "${defaultFS}" + "/user/doris/preinstalled_data/csv_format_test/student_with_names.csv"
             format = "csv_with_names"
